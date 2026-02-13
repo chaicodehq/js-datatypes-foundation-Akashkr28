@@ -54,16 +54,32 @@
  */
 export function createThaliDescription(thali) {
   // Your code here
+  if (typeof thali !== "object" || thali === null || Object.keys(thali).length < 4) return "";
+  return `${thali.name.toUpperCase()} (${thali.isVeg ? "Veg" : "Non-Veg"}) - Items: ${thali.items.join(", ")} - Rs.${thali.price.toFixed(2)}`;
 }
 
 export function getThaliStats(thalis) {
   // Your code here
+  if (typeof thalis !== "object" || thalis === null || Object.keys(thalis).length === 0) return null;
+  return {
+    totalThalis: thalis.length,
+    vegCount: thalis.filter((thali) => thali.isVeg).length,
+    nonVegCount: thalis.filter((thali) => !thali.isVeg).length,
+    avgPrice: (thalis.reduce((total, thali) => total + thali.price, 0) / thalis.length).toFixed(2),
+    cheapest: Math.min(...thalis.map((thali) => thali.price)),
+    costliest: Math.max(...thalis.map((thali) => thali.price)),
+    names: thalis.map((thali) => thali.name),
+  };
 }
 
 export function searchThaliMenu(thalis, query) {
   // Your code here
+  if (typeof thalis !== "object" || thalis === null || Object.keys(thalis).length === 0 || typeof query !== "string") return [];
+  return thalis.filter((thali) => thali.name.toLowerCase().includes(query.toLowerCase()) || thali.items.some((item) => item.toLowerCase().includes(query.toLowerCase())));
 }
 
 export function generateThaliReceipt(customerName, thalis) {
   // Your code here
+  if (typeof customerName !== "string" || typeof thalis !== "object" || thalis === null || Object.keys(thalis).length === 0) return "";
+  return `THALI RECEIPT` + `\n---\nCustomer: ${customerName.toUpperCase()}\n${thalis.map((thali) => `- ${thali.name} x Rs.${thali.price}`).join("\n")}\n---\nTotal: Rs.${thalis.reduce((total, thali) => total + thali.price, 0)}\nItems: ${thalis.length}`;
 }
